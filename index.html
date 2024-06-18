@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>衣服搭配網站</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #fff4e6, #ffccbc);
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #4a2c2a;
+        }
+
+        .container {
+            text-align: center;
+            background: #fff8f0;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            max-width: 80%;
+            width: 100%;
+        }
+
+        .input-container {
+            margin-top: 20px;
+        }
+
+        .input-container input, .input-container button, .input-container select {
+            display: block;
+            margin: 10px auto;
+            padding: 12px;
+            width: calc(100% - 40px);
+            max-width: 400px;
+            border: 1px solid #d1a982;
+            border-radius: 8px;
+            font-size: 16px;
+            background: #ffe6d5;
+            color: #4a2c2a;
+        }
+
+        .input-container input:focus, .input-container select:focus {
+            border-color: #ff7a42;
+            box-shadow: 0 0 8px rgba(255, 122, 66, 0.4);
+            outline: none;
+        }
+
+        .input-container button {
+            background: #ff7a42;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .input-container button:hover {
+            background: #e66b35;
+            transform: scale(1.05);
+        }
+
+        .input-container p {
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: #4a2c2a;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .uploaded-image-container {
+            position: relative;
+            display: inline-block;
+            margin: 5px;
+            border: 1px solid #d1a982;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .uploaded-image-container:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .uploaded-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .delete-button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+            border-radius: 50%;
+            font-size: 12px;
+            line-height: 12px;
+            width: 24px;
+            height: 24px;
+            justify-content: center;
+            align-items: center;
+            display: flex;
+        }
+
+        .classified-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 10px;
+        }
+
+        .classified-images {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+
+        .preview-image {
+            width: calc(100% / 15 - 10px);
+            height: auto;
+            margin: 5px;
+            border: 1px solid #d1a982;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="inputContainer1" class="input-container">
+            <button id="startButton">開始</button>
+            <p id="startText" class="hidden">請提供您的身體數據</p>
+            <input type="text" id="heightInput" class="hidden" placeholder="身高（必填，純數字）">
+            <input type="text" id="weightInput" class="hidden" placeholder="體重（必填，純數字）">
+            <select id="shapeInput" class="hidden">
+                <option value="">選擇體型（必填）</option>
+                <option value="瘦">瘦</option>
+                <option value="中等">中等</option>
+                <option value="胖">胖</option>
+            </select>
+            <button id="submitButton" class="hidden">送出</button>
+        </div>
+        <div id="inputContainer2" class="input-container hidden">
+            <p>請上傳您的衣物圖片（必填）</p>
+            <input type="file" id="imageUpload" accept="image/*" multiple>
+            <div class="preview-container" id="previewContainer"></div>
+            <select id="manualCategorySelect">
+                <option value="">選擇分類</option>
+                <option value="帽子">帽子</option>
+                <option value="上衣">上衣</option>
+                <option value="褲子">褲子</option>
+                <option value="裙子">裙子</option>
+                <option value="毛衣">毛衣</option>
+                <option value="外套">外套</option>
+            </select>
+            <button id="uploadButton">上傳圖片</button>
+        </div>
+        <div id="inputContainer3" class="input-container hidden">
+            <p>您已上傳的衣物圖片</p>
+            <div id="uploadedImages"></div>
+            <button id="addMoreButton">新增更多衣物</button>
+            <button id="proceedButton">下一步</button>
+        </div>
+        <div id="inputContainer5" class="input-container hidden">
+            <p>請選擇您的穿搭方式</p>
+            <button id="systemMatchButton">系統搭配</button>
+            <button id="weatherButton">根據天氣</button>
+        </div>
+        <div id="inputContainer5Weather" class="input-container hidden">
+            <p>請選擇天氣</p>
+            <select id="weatherSelect">
+                <option value="晴天">晴天</option>
+                <option value="雨天">雨天</option>
+                <option value="陰天">陰天</option>
+                <option value="雪天">雪天</option>
+            </select>
+            <button id="weatherSubmitButton">提交</button>
+        </div>
+        <div id="inputContainer6" class="input-container hidden">
+            <p>建議的搭配方案</p>
+            <div id="suggestedOutfits" class="suggested-outfit"></div>
+            <button id="backToSelectionButton">回上一步</button>
+        </div>
+        <div id="inputContainer7" class="input-container hidden">
+            <p>分類結果</p>
+            <div id="classifiedImages" class="classified-images"></div>
+            <button id="finishButton">完成</button>
+        </div>
+    </div>
+
+    <script>
+        const uploadedImages = [];
+        const categories = ['帽子', '上衣', '褲子', '裙子', '毛衣', '外套'];
+
+        document.getElementById('startButton').addEventListener('click', function() {
+            document.getElementById('startButton').classList.add('hidden');
+            document.getElementById('heightInput').classList.remove('hidden');
+            document.getElementById('weightInput').classList.remove('hidden');
+            document.getElementById('shapeInput').classList.remove('hidden');
+            document.getElementById('submitButton').classList.remove('hidden');
+        });
+
+        document.getElementById('submitButton').addEventListener('click', function() {
+            const height = document.getElementById('heightInput').value.trim();
+            const weight = document.getElementById('weightInput').value.trim();
+            const shape = document.getElementById('shapeInput').value.trim();
+            if (height && weight && shape) {
+                document.getElementById('inputContainer1').classList.add('hidden');
+                document.getElementById('inputContainer2').classList.remove('hidden');
+            } else {
+                alert("請填寫所有必填欄位！");
+            }
+        });
+
+        document.getElementById('imageUpload').addEventListener('change', function() {
+            const previewContainer = document.getElementById('previewContainer');
+            previewContainer.innerHTML = ''; // Clear previous previews
+            for (const file of this.files) {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.className = 'preview-image';
+                previewContainer.appendChild(img);
+            }
+        });
+
+        document.getElementById('uploadButton').addEventListener('click', function() {
+            const imageUpload = document.getElementById('imageUpload');
+            const category = document.getElementById('manualCategorySelect').value;
+            if (imageUpload.files.length > 0 && category) {
+                for (const file of imageUpload.files) {
+                    const container = document.createElement('div');
+                    container.className = 'uploaded-image-container';
+                    container.dataset.category = category;
+
+                    const img = document.createElement('img');
+                    img.src = URL.createObjectURL(file);
+                    img.className = 'uploaded-image';
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.className = 'delete-button';
+                    deleteButton.innerText = '刪除';
+
+                    deleteButton.addEventListener('click', function() {
+                        const index = uploadedImages.indexOf(file);
+                        if (index > -1) {
+                            uploadedImages.splice(index, 1);
+                        }
+                        container.remove();
+                    });
+
+                    container.appendChild(img);
+                    container.appendChild(deleteButton);
+                    document.getElementById('uploadedImages').appendChild(container);
+
+                    uploadedImages.push({ file, category });
+                }
+                document.getElementById('inputContainer2').classList.add('hidden');
+                document.getElementById('inputContainer3').classList.remove('hidden');
+            } else {
+                alert("請選擇圖片和分類！");
+            }
+        });
+
+        document.getElementById('addMoreButton').addEventListener('click', function() {
+            document.getElementById('inputContainer3').classList.add('hidden');
+            document.getElementById('inputContainer2').classList.remove('hidden');
+        });
+
+        document.getElementById('proceedButton').addEventListener('click', function() {
+            document.getElementById('inputContainer3').classList.add('hidden');
+            document.getElementById('inputContainer5').classList.remove('hidden');
+        });
+
+        document.getElementById('systemMatchButton').addEventListener('click', function() {
+            displayOutfit('系統搭配', ['帽子', '上衣', '褲子', '裙子']);
+        });
+
+        document.getElementById('weatherButton').addEventListener('click', function() {
+            document.getElementById('inputContainer5').classList.add('hidden');
+            document.getElementById('inputContainer5Weather').classList.remove('hidden');
+        });
+
+        document.getElementById('weatherSubmitButton').addEventListener('click', function() {
+            const weather = document.getElementById('weatherSelect').value;
+            let items = [];
+            let suggestion = '';
+
+            switch (weather) {
+                case '晴天':
+                    items = ['帽子', '上衣', '褲子', '裙子'];
+                    suggestion = '根據您選擇的天氣(晴天)，我們建議的搭配方案...';
+                    break;
+                case '雨天':
+                    items = ['帽子', '上衣', '外套', '褲子'];
+                    suggestion = '根據您選擇的天氣(雨天)，我們建議的搭配方案。出門請帶雨傘！';
+                    break;
+                case '陰天':
+                    items = ['帽子', '上衣', '褲子', '裙子'];
+                    suggestion = '根據您選擇的天氣(陰天)，我們建議的搭配方案。出門請帶雨傘以備不時之需！';
+                    break;
+                case '雪天':
+                    items = ['帽子', '毛衣', '外套', '褲子'];
+                    suggestion = '根據您選擇的天氣(雪天)，我們建議的搭配方案...';
+                    break;
+            }
+
+            displayOutfit(suggestion, items);
+        });
+
+        function displayOutfit(suggestion, categories) {
+            document.getElementById('inputContainer5Weather').classList.add('hidden');
+            document.getElementById('inputContainer6').classList.remove('hidden');
+
+            const suggestedOutfits = document.getElementById('suggestedOutfits');
+            suggestedOutfits.innerHTML = `<p>${suggestion}</p>`;
+
+            categories.forEach(category => {
+                const image = uploadedImages.find(img => img.category === category);
+                if (image) {
+                    const img = document.createElement('img');
+                    img.src = URL.createObjectURL(image.file);
+                    img.className = 'preview-image';
+                    suggestedOutfits.appendChild(img);
+                } else {
+                    const missingItem = document.createElement('p');
+                    missingItem.innerText = `${category} 缺失`;
+                    suggestedOutfits.appendChild(missingItem);
+                }
+            });
+        }
+
+        document.getElementById('backToSelectionButton').addEventListener('click', function() {
+            document.getElementById('inputContainer6').classList.add('hidden');
+            document.getElementById('inputContainer5').classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>
