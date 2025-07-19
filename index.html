@@ -1,173 +1,127 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>穿搭生成器</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 0;
-        }
-
-        h1, h2 {
-            text-align: center;
-            color: #333;
-        }
-
-        .section {
-            display: none;
-            padding: 20px;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            font-weight: bold;
-        }
-
-        input, select, button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-        }
-
-        .navigation-buttons button {
-            margin: 10px 5px;
-            width: auto;
-        }
-
-        .image-preview-container {
-            display: flex;
-            flex-direction: column;
-            margin-top: 20px;
-        }
-
-        .category-group {
-            margin-bottom: 15px;
-        }
-
-        .category-group h3 {
-            margin-bottom: 10px;
-        }
-
-        .category-group img {
-            width: 100px;
-            height: 100px;
-            margin: 5px;
-        }
-
-        .result-container img {
-            width: 100px;
-            height: 100px;
-            margin: 5px;
-        }
-
-        .result-container p {
-            margin: 5px;
-        }
-
-        #missingParts {
-            color: red;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>穿搭生成器（最終版本）</title>
+<style>
+    body { font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 0; padding: 0; }
+    h1, h2 { text-align: center; color: #333; }
+    .section { display: none; padding: 20px; }
+    .section.active { display: block; }
+    .form-group { margin-bottom: 15px; }
+    label { font-weight: bold; }
+    input, select, button { width: 100%; padding: 10px; margin-top: 5px; }
+    .navigation-buttons button { margin: 10px 5px; width: auto; }
+    .image-preview-container { display: flex; flex-direction: column; margin-top: 20px; }
+    .category-group { margin-bottom: 15px; }
+    .category-group h3 { margin-bottom: 10px; }
+    .category-group img { width: 100px; height: 100px; margin: 5px; }
+    .result-container img { width: 100px; height: 100px; margin: 5px; }
+    .result-container p { margin: 5px; }
+    .score-details { font-size: 14px; color: #444; margin-top: 8px; padding: 8px; background: #f1f1f1; border-radius: 6px; }
+    #missingParts { color: red; }
+</style>
 </head>
 <body>
-    <h1>穿搭生成器</h1>
+<h1>穿搭生成器</h1>
 
-    <!-- 基本信息 -->
-    <div class="section active" id="userInfoSection">
-        <h2>基本信息</h2>
-        <div class="form-group">
-            <label for="heightInput">身高 (cm)</label>
-            <input type="number" id="heightInput" placeholder="請輸入您的身高">
-        </div>
-        <div class="form-group">
-            <label for="weightInput">體重 (kg)</label>
-            <input type="number" id="weightInput" placeholder="請輸入您的體重">
-        </div>
-        <div class="navigation-buttons">
-            <button id="nextToUpload">下一頁</button>
-        </div>
+<!-- 基本信息 -->
+<div class="section active" id="userInfoSection">
+    <h2>基本信息</h2>
+    <div class="form-group">
+        <label for="heightInput">身高 (cm)</label>
+        <input type="number" id="heightInput" placeholder="請輸入您的身高">
     </div>
-
-    <!-- 圖片上傳 -->
-    <div class="section" id="uploadSection">
-        <h2>上傳衣物圖片</h2>
-        <div class="form-group">
-            <label for="fileInput">選擇圖片</label>
-            <input type="file" id="fileInput" multiple accept="image/*">
-        </div>
-        <div class="form-group">
-            <label for="categorySelect">分類 (每張圖需選擇)</label>
-            <select id="categorySelect">
-                <option value="" disabled selected>請選擇分類</option>
-                <option value="帽子">帽子</option>
-                <option value="上衣">上衣</option>
-                <option value="褲子">褲子</option>
-                <option value="外套">外套</option>
-                <option value="裙子">裙子</option>
-                <option value="毛衣">毛衣</option>
-            </select>
-            <button id="addCategoryBtn">添加分類</button>
-        </div>
-        <div id="imagePreviewContainer" class="image-preview-container"></div>
-        <div class="navigation-buttons">
-            <button id="backToUserInfo">上一頁</button>
-            <button id="nextToWeather">下一頁</button>
-        </div>
+    <div class="form-group">
+        <label for="weightInput">體重 (kg)</label>
+        <input type="number" id="weightInput" placeholder="請輸入您的體重">
     </div>
-
-    <!-- 天氣選擇 -->
-    <div class="section" id="weatherSection">
-        <h2>選擇天氣</h2>
-        <div class="form-group">
-            <label for="weatherSelect">天氣狀況</label>
-            <select id="weatherSelect">
-                <option value="" disabled selected>請選擇天氣</option>
-                <option value="晴天">晴天</option>
-                <option value="雨天">雨天</option>
-                <option value="陰天">陰天</option>
-                <option value="雪天">雪天</option>
-            </select>
-        </div>
-        <div class="navigation-buttons">
-            <button id="backToUpload">上一頁</button>
-            <button id="nextToResult">下一頁</button>
-        </div>
+    <div class="form-group">
+        <label for="genderSelect">性別</label>
+        <select id="genderSelect">
+            <option value="" disabled selected>請選擇性別</option>
+            <option value="male">男性</option>
+            <option value="female">女性</option>
+        </select>
     </div>
-
-    <!-- 穿搭結果 -->
-    <div class="section" id="outfitResultSection">
-        <h2>穿搭結果</h2>
-        <div id="outfitResultContainer" class="result-container"></div>
-        <p id="missingParts"></p>
-        <p id="suggestionText"></p>
-        <div class="navigation-buttons">
-            <button id="backToWeather">上一頁</button>
-        </div>
+    <div class="navigation-buttons">
+        <button id="nextToUpload">下一頁</button>
     </div>
+</div>
 
-    <script>
-        const sections = document.querySelectorAll('.section');
-let currentPage = 0;
+<!-- 圖片上傳 -->
+<div class="section" id="uploadSection">
+    <h2>上傳衣物圖片</h2>
+    <div class="form-group">
+        <label for="fileInput">選擇圖片</label>
+        <input type="file" id="fileInput" multiple accept="image/*">
+    </div>
+    <div class="form-group">
+        <label for="categorySelect">分類</label>
+        <select id="categorySelect">
+            <option value="" disabled selected>請選擇分類</option>
+            <option value="帽子">帽子</option>
+            <option value="上衣">上衣</option>
+            <option value="褲子">褲子</option>
+            <option value="外套">外套</option>
+            <option value="裙子">裙子</option>
+            <option value="毛衣">毛衣</option>
+        </select>
+        <button id="addCategoryBtn">添加分類</button>
+    </div>
+    <div id="imagePreviewContainer" class="image-preview-container"></div>
+    <div class="navigation-buttons">
+        <button id="backToUserInfo">上一頁</button>
+        <button id="nextToWeather">下一頁</button>
+    </div>
+</div>
 
-function showPage(pageIndex) {
-    sections.forEach((section, index) => {
-        section.classList.toggle('active', index === pageIndex);
-    });
-    currentPage = pageIndex;
+<!-- 天氣選擇 -->
+<div class="section" id="weatherSection">
+    <h2>選擇天氣</h2>
+    <div class="form-group">
+        <label for="weatherSelect">天氣狀況</label>
+        <select id="weatherSelect">
+            <option value="" disabled selected>請選擇天氣</option>
+            <option value="晴天">晴天</option>
+            <option value="雨天">雨天</option>
+            <option value="陰天">陰天</option>
+            <option value="雪天">雪天</option>
+        </select>
+    </div>
+    <div class="navigation-buttons">
+        <button id="backToUpload">上一頁</button>
+        <button id="nextToResult">生成最佳組合</button>
+    </div>
+</div>
+
+<!-- 穿搭結果 -->
+<div class="section" id="outfitResultSection">
+    <h2>最佳搭配結果</h2>
+    <p id="missingParts"></p>
+    <p id="suggestionText"></p>
+    <div id="outfitResultContainer" class="result-container"></div>
+    <div class="navigation-buttons">
+        <button id="backToWeather">上一頁</button>
+    </div>
+</div>
+
+<script>
+const sections = document.querySelectorAll('.section');
+const uploadedImages = {};
+const weatherWeights = {
+    '晴天': { '帽子': 1, '上衣': 3, '褲子': 3, '裙子': 2 },
+    '雨天': { '帽子': 2, '上衣': 3, '外套': 4, '褲子': 3 },
+    '陰天': { '帽子': 1, '上衣': 3, '褲子': 3, '裙子': 2 },
+    '雪天': { '帽子': 2, '毛衣': 4, '外套': 5, '褲子': 3 }
+};
+
+function showPage(i) {
+    sections.forEach((s, idx) => s.classList.toggle('active', idx === i));
 }
 
-// 導航按鈕
+// 導航
 document.getElementById('nextToUpload').addEventListener('click', () => showPage(1));
 document.getElementById('backToUserInfo').addEventListener('click', () => showPage(0));
 document.getElementById('nextToWeather').addEventListener('click', () => showPage(2));
@@ -175,137 +129,194 @@ document.getElementById('backToUpload').addEventListener('click', () => showPage
 document.getElementById('nextToResult').addEventListener('click', () => generateResult());
 document.getElementById('backToWeather').addEventListener('click', () => showPage(2));
 
-const uploadedImages = {};
+// 上傳圖片 & 預分析顏色
 document.getElementById('addCategoryBtn').addEventListener('click', () => {
     const fileInput = document.getElementById('fileInput');
-    const categorySelect = document.getElementById('categorySelect');
-    const previewContainer = document.getElementById('imagePreviewContainer');
-
-    if (!fileInput.files.length || !categorySelect.value) {
-        alert('請選擇圖片並設置分類！');
+    const category = document.getElementById('categorySelect').value;
+    if (!fileInput.files.length || !category) {
+        alert('請選擇圖片並分類！');
         return;
     }
-
-    const category = categorySelect.value;
     if (!uploadedImages[category]) uploadedImages[category] = [];
-
     Array.from(fileInput.files).forEach(file => {
-        uploadedImages[category].push(file);
-
-        const group = document.getElementById(category) || createCategoryGroup(category, previewContainer);
-        const img = document.createElement('img');
-        img.src = URL.createObjectURL(file);
-        group.appendChild(img);
+        getDominantColor(file).then(color => {
+            uploadedImages[category].push({ file, color });
+            const previewContainer = document.getElementById('imagePreviewContainer');
+            const group = document.getElementById(category) || createCategoryGroup(category, previewContainer);
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(file);
+            group.appendChild(img);
+        });
     });
-
     fileInput.value = '';
-    categorySelect.value = '';
+    document.getElementById('categorySelect').value = '';
 });
 
 function createCategoryGroup(category, container) {
-    const group = document.createElement('div');
-    group.classList.add('category-group');
-    group.id = category;
-
+    const div = document.createElement('div');
+    div.classList.add('category-group');
+    div.id = category;
     const title = document.createElement('h3');
     title.textContent = category;
-    group.appendChild(title);
-
-    container.appendChild(group);
-    return group;
+    div.appendChild(title);
+    container.appendChild(div);
+    return div;
 }
 
+// 生成結果
 function generateResult() {
     const weather = document.getElementById('weatherSelect').value;
+    const gender = document.getElementById('genderSelect').value;
     const resultContainer = document.getElementById('outfitResultContainer');
-    const missingParts = document.getElementById('missingParts');
-    const suggestionText = document.getElementById('suggestionText');
-
     resultContainer.innerHTML = '';
-    missingParts.textContent = '';
-    suggestionText.textContent = '';
+    document.getElementById('missingParts').textContent = '';
+    document.getElementById('suggestionText').textContent = '';
 
-    let items = [];
-    let suggestion = '';
+    let items = Object.keys(weatherWeights[weather] || {});
+    if (gender === 'male') items = items.filter(i => i !== '裙子');
 
-    switch (weather) {
-        case '晴天':
-            items = ['帽子', '上衣', '褲子', '裙子'];
-            suggestion = '根據您選擇的天氣(晴天)，我們建議的搭配方案如下：';
-            break;
-        case '雨天':
-            items = ['帽子', '上衣', '外套', '褲子'];
-            suggestion = '根據您選擇的天氣(雨天)，我們建議的搭配方案如下。出門請帶雨傘！';
-            break;
-        case '陰天':
-            items = ['帽子', '上衣', '褲子', '裙子'];
-            suggestion = '根據您選擇的天氣(陰天)，我們建議的搭配方案如下。出門請帶雨傘以備不時之需！';
-            break;
-        case '雪天':
-            items = ['帽子', '毛衣', '外套', '褲子'];
-            suggestion = '根據您選擇的天氣(雪天)，我們建議的搭配方案如下：';
-            break;
+    for (const item of items) {
+        if (!uploadedImages[item]) {
+            document.getElementById('missingParts').textContent = '缺少必需的部件，無法生成搭配方案。';
+            showPage(3);
+            return;
+        }
     }
 
-    const combinations = generateCombinations(items);
-    displayCombinations(combinations, resultContainer, missingParts, suggestion, 2); // 最多顯示兩套
+    const combos = generateCombinations(items, weather);
+    if (combos.length === 0) {
+        document.getElementById('missingParts').textContent = '無法生成搭配。';
+    } else {
+        document.getElementById('suggestionText').textContent = `最佳兩套如下（顯示分數）：`;
+        combos.forEach((c, idx) => {
+            const div = document.createElement('div');
+            div.innerHTML = `<h3>方案 ${idx + 1}（總分：${c.score.toFixed(2)}）</h3>`;
+            c.combo.forEach(item => {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(item.file);
+                div.appendChild(img);
+            });
+            const detail = document.createElement('div');
+            detail.classList.add('score-details');
+            detail.innerHTML = `
+                天氣權重分：${c.details.weightScore}<br>
+                材質分：${c.details.materialScore}<br>
+                顏色協調分：${c.details.colorScore.toFixed(2)}<br>
+                身材適配分：${c.details.bodyScore}
+            `;
+            div.appendChild(detail);
+            resultContainer.appendChild(div);
+        });
+    }
     showPage(3);
 }
 
-function generateCombinations(items) {
-    const validCombinations = [];
-    const missing = [];
-
-    items.forEach(item => {
-        if (!uploadedImages[item]) missing.push(item);
-    });
-
-    if (missing.length > 0) return []; // 若有任何部件缺失，直接返回空組合
-
-    // 找出所有可能的組合，生成有效結果
-    const possibleCombinations = items.reduce((acc, category) => {
-        const images = uploadedImages[category] || [];
-        if (acc.length === 0) {
-            return images.map(image => [image]);
-        }
-        const newCombinations = [];
-        acc.forEach(existingCombination => {
-            images.forEach(image => {
-                newCombinations.push([...existingCombination, image]);
+// 生成所有組合（隨機抽樣）
+function generateCombinations(items, weather) {
+    let combos = items.reduce((acc, category) => {
+        const images = uploadedImages[category];
+        const subset = getRandomSubset(images, 10);
+        const topImages = selectTopImages(subset, weather, 3);
+        if (acc.length === 0) return topImages.map(img => [img]);
+        const newCombos = [];
+        acc.forEach(existing => {
+            topImages.forEach(img => {
+                newCombos.push([...existing, img]);
             });
         });
-        return newCombinations;
+        return newCombos;
     }, []);
-
-    // 選擇最多兩套組合
-    for (let i = 0; i < Math.min(possibleCombinations.length, 2); i++) {
-        validCombinations.push(possibleCombinations[i]);
-    }
-
-    return validCombinations;
+    const scored = combos.map(c => {
+        const { total, details } = calculateScore(c, items, weather);
+        return { combo: c, score: total, details };
+    });
+    scored.sort((a, b) => b.score - a.score);
+    return scored.slice(0, 2);
 }
 
-function displayCombinations(combinations, container, missingElement, suggestionText, maxDisplayCount) {
-    if (combinations.length === 0) {
-        missingElement.textContent = '缺少必需的部件，無法生成搭配方案。';
-        return;
-    }
+function getRandomSubset(arr, size) {
+    return arr.slice().sort(() => Math.random() - 0.5).slice(0, size);
+}
 
-    suggestionText.textContent = `我們根據天氣推薦以下${combinations.length}套搭配方案：`;
+function selectTopImages(images, weather, k) {
+    return images
+        .map(img => ({ img, score: getItemPriority(img.file.name, weather) }))
+        .sort((a, b) => b.score - a.score)
+        .slice(0, k)
+        .map(o => o.img);
+}
 
-    combinations.slice(0, maxDisplayCount).forEach((combination, index) => {
-        const combinationDiv = document.createElement('div');
-        combinationDiv.innerHTML = `<h3>搭配方案 ${index + 1}</h3>`;
-        combination.forEach(image => {
-            const imgElement = document.createElement('img');
-            imgElement.src = URL.createObjectURL(image);
-            combinationDiv.appendChild(imgElement);
+function getItemPriority(name, weather) {
+    name = name.toLowerCase();
+    let score = 0;
+    if (weather === '雪天' && name.includes('毛衣')) score += 10;
+    if ((weather === '雪天' || weather === '雨天') && name.includes('外套')) score += 8;
+    if (weather === '晴天' && (name.includes('薄') || name.includes('cotton'))) score += 5;
+    return score;
+}
+
+function getUserBMI() {
+    const h = parseFloat(document.getElementById('heightInput').value);
+    const w = parseFloat(document.getElementById('weightInput').value);
+    if (!h || !w) return null;
+    return w / ((h / 100) ** 2);
+}
+
+function calculateScore(combo, items, weather) {
+    let weightScore = 0, materialScore = 0, bodyScore = 0;
+    combo.forEach((item, i) => {
+        const category = items[i];
+        const name = item.file.name.toLowerCase();
+        weightScore += (weatherWeights[weather][category] || 1);
+        if (weather === '雪天' && name.includes('毛衣')) materialScore += 5;
+        if ((weather === '雪天' || weather === '雨天') && name.includes('外套')) materialScore += 3;
+        if (weather === '晴天' && (name.includes('薄') || name.includes('cotton'))) materialScore += 2;
+    });
+    const bmi = getUserBMI();
+    if (bmi) {
+        combo.forEach(item => {
+            const n = item.file.name.toLowerCase();
+            if (bmi < 18.5 && (n.includes('短') || n.includes('slim'))) bodyScore += 2;
+            if (bmi >= 24 && (n.includes('寬鬆') || n.includes('loose'))) bodyScore += 2;
         });
-        container.appendChild(combinationDiv);
+    }
+    const colorScore = getColorHarmonyScore(combo.map(i => i.color));
+    return { total: weightScore + materialScore + bodyScore + colorScore, details: { weightScore, materialScore, bodyScore, colorScore } };
+}
+
+// 顏色分析
+function getDominantColor(file) {
+    return new Promise(res => {
+        const img = new Image();
+        img.src = URL.createObjectURL(file);
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 50; canvas.height = 50;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, 50, 50);
+            const data = ctx.getImageData(0, 0, 50, 50).data;
+            let r = 0, g = 0, b = 0, count = 0;
+            for (let i = 0; i < data.length; i += 4) { r += data[i]; g += data[i+1]; b += data[i+2]; count++; }
+            res([Math.floor(r/count), Math.floor(g/count), Math.floor(b/count)]);
+        };
     });
 }
 
+function getColorHarmonyScore(colors) {
+    let dist = 0, pairs = 0;
+    for (let i = 0; i < colors.length; i++) {
+        for (let j = i+1; j < colors.length; j++) {
+            dist += colorDist(colors[i], colors[j]);
+            pairs++;
+        }
+    }
+    const avg = dist / pairs;
+    return Math.max(0, 10 - avg / 30);
+}
 
-    </script>
+function colorDist(c1, c2) {
+    return Math.sqrt((c1[0]-c2[0])**2 + (c1[1]-c2[1])**2 + (c1[2]-c2[2])**2);
+}
+</script>
 </body>
 </html>
