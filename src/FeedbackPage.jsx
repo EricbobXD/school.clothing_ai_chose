@@ -1,0 +1,5 @@
+import {useState} from 'react';
+export default function FeedbackPage(){
+  const [title,setTitle]=useState(''),[body,setBody]=useState(''),[ready,setReady]=useState(false);
+  return <section className="info-page"><p className="eyebrow">FEEDBACK</p><h1>讓衣序更好用</h1><p>遇到問題或有新想法？先整理內容，再由你到 GitHub 確認送出。</p><form className="panel feedback-form" onSubmit={event=>{event.preventDefault();setReady(true);}} onChange={()=>setReady(false)}><label>主旨<input required maxLength={120} value={title} onChange={event=>setTitle(event.target.value)} placeholder="例如：衣物分類建議" /></label><label>回饋內容<textarea required maxLength={4000} rows={7} value={body} onChange={event=>setBody(event.target.value)} placeholder="發生什麼情況？你希望如何改善？" /></label><p className="small">送出後內容會公開，請勿加入個人資料或私密照片。這裡不會自動傳送內容。</p><button className="primary" type="submit">準備回饋</button>{ready&&<div className="feedback-ready"><p>內容已準備好，下一步會前往 GitHub；需登入並再次確認才會送出。</p><a className="quiet" href={'https://github.com/EricbobXD/school.clothing_ai_chose/issues/new?'+new URLSearchParams({title,body})} target="_blank" rel="noopener noreferrer">前往 GitHub 確認送出 ↗</a></div>}</form></section>;
+}
