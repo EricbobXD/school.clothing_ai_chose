@@ -4,6 +4,10 @@
 
 ## 本機預覽
 
+正式網站：https://ericbobxd.github.io/school.clothing_ai_chose/
+
+推送至 `main` 後，`.github/workflows/deploy-pages.yml` 會執行測試與建置，再發布到 GitHub Pages。部署來源使用 GitHub Actions。Actions 建置時會使用專案子路徑，本機開發保持相對路徑。
+
 需要 Node.js 20.19+ 或 22.12+（建議使用目前的 LTS）。
 
 首次執行 `npm install`，再執行 `npm run dev`，開啟 http://127.0.0.1:4173 。
